@@ -1,0 +1,247 @@
+import React from 'react';
+
+import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, ActivityIndicator } from 'react-native';
+
+import Head from '../components/Head';
+import Login from '../components/Login';
+import Viewer from '../components/Viewer';
+import Loader from '../components/Loader';
+
+export default class Main extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      money: "",
+      date: "",
+      onCard:"",
+      onCardDate:"",
+      password: '63791d2c62',
+      text: 'Tobe',
+      isLoggedin: false,
+      isLoading: true
+    };
+  }
+
+  async componentDidMount() {
+    await this._retrieveLogin();
+    
+  
+  }
+
+  _setLogin = async () => {
+    try {
+      await AsyncStorage.setItem('uName', this.state.text);
+      await AsyncStorage.setItem('pWord', this.state.password);
+
+    } catch (error) {
+
+    }
+  };
+
+
+  _retrieveLogin = async () => {
+    try {
+
+      const uName = await AsyncStorage.getItem('uName');
+      const pWord = await AsyncStorage.getItem('pWord');
+
+      this.setState({
+        text: uName,
+        password: pWord,
+        
+      },() => {
+        if(this.state.text!=null && this.state.password != null)
+        {
+      
+    
+         this.fetchData();
+      }
+        else{
+      
+          this.setState({
+            isLoading:false,
+          })
+        }
+      })
+
+    } catch (error) {
+      this.setState({
+        isLoggedin: false,
+      })
+    }
+  };
+
+  async _onClick() {
+
+    if (!this.state.isLoggedin) {
+     
+      await this._setLogin();
+    }
+    if(this.state.text!=null && this.state.password != null)
+    {
+     this.setState({
+       isLoading:true
+     })
+
+    await this.fetchData();
+
+    this.setState({
+      isLoading:false
+    })
+  }
+    else{
+   
+      this.setState({
+        isLoading:false,
+      })
+    }
+  
+
+  }
+
+
+  async logOut() {
+    await AsyncStorage.removeItem("uName");
+    await AsyncStorage.removeItem("pWord");
+
+    this.setState({
+      text: '',
+      password: '',
+      isLoggedin: false,
+    })
+
+  }
+
+
+  async fetchData() {
+
+    if (this.state.text != null && this.state.password != null) {
+
+      var details = {
+        providerHidden: 2,
+        "j_username": this.state.text,
+        "j_password": this.state.password,
+        "submitBtn": "Logga in"
+      };
+      var formBody = [];
+      for (var property in details) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(details[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+      }
+      formBody = formBody.join("&");
+
+      const response = await fetch('https://webtick.se/webtick/user/pages/login/j_acegi_security_check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: formBody
+      })
+
+      const htmlString = await response.text();  // get response text
+      let pattern = /idg_opt_319">(.*?)<\/span>/;
+      let patternDate = /Senast uppdaterat (.*?)\)<\/span>/
+      let onPat = /idg_opt_306">(.*?)<\/span>/;
+      let onPatDate =/idg_opt_308">Fr&#229;n(.*?)<\/span>/;
+      var on="";
+      var onDate="";
+      if (onPat.test(htmlString) && onPatDate.test(htmlString)) {
+        on=onPat.exec(htmlString);
+        onDate=onPatDate.exec(htmlString);
+        onDate = onDate[1];
+      }
+      console.log("e" +onDate);
+
+      if (pattern.test(htmlString) && patternDate.test(htmlString)) {
+        let match = pattern.exec(htmlString);
+        let matchDate = patternDate.exec(htmlString);
+
+        this.setState({
+          money: match[1],
+          date: matchDate[1],
+          onCard:on[1],
+          onCardDate:onDate,
+          isLoggedin: true,
+          isLoading: false,
+
+        })
+      }
+      else {
+        this.setState({
+          isLoggedin: false,
+          isLoading: false,
+        })
+        alert("kunde inte logga in");
+      }
+    }
+  }
+
+  onChangeValue = (name,val) => {
+   
+this.setState({
+  [name]:val
+})
+ }
+ 
+
+
+
+
+  render() {
+    return (
+
+
+      <View style={styles.container}>
+         {this.state.isLoading &&
+        <Loader/>}
+          
+            {this.state.isLoggedin && !this.state.isLoading &&
+            <Head
+            logOut={this.logOut.bind(this)}
+            />
+            }
+           {!this.state.isLoggedin && !this.state.isLoading &&
+            <Login
+            text={this.state.text}
+            password={this.state.password}
+            onChangeValue={this.onChangeValue}
+            _onClick={this._onClick.bind(this)}
+            />
+           }
+
+            {this.state.isLoggedin && !this.state.isLoading &&
+            <Viewer 
+            money={this.state.money}
+            date={this.state.date}
+            onCard={this.state.onCard}
+            onCardDate={this.state.onCardDate}
+            text={this.state.text}
+            _onClick={this._onClick.bind(this)}
+        
+
+            />
+          }
+            
+
+          </View>
+        
+
+   
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+
+
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    width: "100%",
+  },
+
+
+});
