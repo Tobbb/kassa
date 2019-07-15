@@ -58,6 +58,7 @@ padding:10,
         fontSize:40,
         textAlign:"center",
         padding:10,
+      
     },
     self:{
         fontSize:30,

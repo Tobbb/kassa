@@ -157,7 +157,7 @@ export default class Main extends React.Component {
         onDate=onPatDate.exec(htmlString);
         onDate = onDate[1];
       }
-      console.log("e" +onDate);
+  
 
       if (pattern.test(htmlString) && patternDate.test(htmlString)) {
         let match = pattern.exec(htmlString);
