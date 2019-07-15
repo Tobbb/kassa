@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, ActivityIndicator,ToastAndroid } from 'react-native';
 
 import Head from '../components/Head';
 import Login from '../components/Login';
@@ -20,7 +20,8 @@ export default class Main extends React.Component {
       password: '63791d2c62',
       text: 'Tobe',
       isLoggedin: false,
-      isLoading: true
+      isLoading: true,
+      error:''
     };
   }
 
@@ -146,6 +147,9 @@ export default class Main extends React.Component {
       let patternDate = /Senast uppdaterat (.*?)\)<\/span>/
       let onPat = /idg_opt_306">(.*?)<\/span>/;
       let onPatDate =/idg_opt_308">Fr&#229;n(.*?)<\/span>/;
+
+      let failPatt= /kortet ur bakgrundsystemet/;
+
       var on="";
       var onDate="";
       if (onPat.test(htmlString) && onPatDate.test(htmlString)) {
@@ -166,16 +170,30 @@ export default class Main extends React.Component {
           onCardDate:onDate,
           isLoggedin: true,
           isLoading: false,
+          error:''
 
         })
+      }
+      else if(failPatt.test(htmlString)){
+        this.setState({
+          isLoggedin: false,
+          isLoading: false,
+          error:"Fel med karlstadsbuss interna system"
+        })
+
       }
       else {
         this.setState({
           isLoggedin: false,
           isLoading: false,
+          error:"Fel vid inloggning, försök igen"
         })
-        alert("kunde inte logga in");
+       
       }
+      if(this.state.error != '')
+      ToastAndroid.show(this.state.error, ToastAndroid.LONG);
+
+      
     }
   }
 
@@ -241,6 +259,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     width: "100%",
+  
   },
 
 

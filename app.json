@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Reskassa",
-    "slug": "reskassa",
+    "slug": "Reskassa",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [
@@ -25,7 +25,6 @@
     ],
     "ios": {
       "supportsTablet": true
-    },
-    "description": ""
+    }
   }
 }
