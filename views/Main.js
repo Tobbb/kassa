@@ -6,6 +6,8 @@ import Head from '../components/Head';
 import Login from '../components/Login';
 import Viewer from '../components/Viewer';
 import Loader from '../components/Loader';
+import Gdpr from '../components/Gdpr';
+import Konto from '../components/Konto';
 
 export default class Main extends React.Component {
 
@@ -21,14 +23,37 @@ export default class Main extends React.Component {
       text: 'Tobe',
       isLoggedin: false,
       isLoading: true,
-      error:''
+      error:'',
+      gdpr:true,
+      webOpen:false,
+      link:'',
     };
   }
 
   async componentDidMount() {
-    await this._retrieveLogin();
+      const GDPR = await AsyncStorage.getItem('gdpr')?
+      await this._retrieveLogin():
+      this.setState({
+        gdpr:false
+      })
     
   
+  }
+
+  async acceptgdpr(){
+    this.setState({
+      gdpr:true
+    })
+    
+    await AsyncStorage.setItem('gdpr', 'ok').then(() => this._retrieveLogin())
+  }
+
+  handleWeb(link){
+    this.setState({
+      link:link,
+      webOpen:!this.state.webOpen,
+    })
+    console.log(link);
   }
 
   _setLogin = async () => {
@@ -210,7 +235,7 @@ this.setState({
 
   render() {
     return (
-
+      
 
       <View style={styles.container}>
          {this.state.isLoading &&
@@ -227,6 +252,7 @@ this.setState({
             password={this.state.password}
             onChangeValue={this.onChangeValue}
             _onClick={this._onClick.bind(this)}
+            handleWeb={this.handleWeb.bind(this)}
             />
            }
 
@@ -242,11 +268,21 @@ this.setState({
 
             />
           }
+            {!this.state.gdpr &&
+            <Gdpr
+            acceptgdpr={this.acceptgdpr.bind(this)}
+            />
             
-
+            }
+            {this.state.webOpen &&
+            <Konto
+            handleWeb={this.handleWeb.bind(this)}
+            link={this.state.link}
+            />
+          }
           </View>
         
-
+      
    
     );
   }

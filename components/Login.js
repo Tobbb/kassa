@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, ActivityIndicator,TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -56,6 +56,12 @@ export default class Head extends React.Component {
           style={{color:"#000"}}
         />
         <Text style={styles.small}>Vi sparar inga uppgifter, och har ingen koppling till Karlstadsbuss</Text>
+        <TouchableOpacity style={styles.helpers} onPress={()=>this.props.handleWeb('https://webtick.se/webtick/user/pages/login/RegisterAccount.iface?provider=2')} >
+ <Text style={styles.reg}> Registrera konto (Länk)</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.helpers} onPress={()=>this.props.handleWeb('https://webtick.se/webtick/user/pages/login/LoginBadCredentials.iface?provider=2')} >
+ <Text style={styles.reg}> Glömt Lösenord (Länk)</Text>
+    </TouchableOpacity>
       </KeyboardAvoidingView>
       
     
@@ -64,10 +70,24 @@ export default class Head extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  helpers:{
+    marginLeft:"15%",
+width:"70%",
+  },
+  reg:{
+    textAlign:"center",
+    paddingVertical:10,
+    color:"#bd6b00",
+    borderBottomWidth: 1,
+    
+
+  },
     small:{
         textAlign:"center",
         fontSize:10,
-        paddingVertical:10
+        paddingVertical:10,
+        paddingBottom:10,
+        
     },
     sub:{
         textAlign:"center",
