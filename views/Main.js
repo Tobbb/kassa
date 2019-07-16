@@ -143,7 +143,7 @@ export default class Main extends React.Component {
       })
 
       const htmlString = await response.text();  // get response text
-      let pattern = /idg_opt_319">(.*?)<\/span>/;
+      let pattern = /idg_opt_319">(.*?) kr <\/span>/;
       let patternDate = /Senast uppdaterat (.*?)\)<\/span>/
       let onPat = /idg_opt_306">(.*?)<\/span>/;
       let onPatDate =/idg_opt_308">Fr&#229;n(.*?)<\/span>/;
