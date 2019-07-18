@@ -10,7 +10,7 @@ export default class Head extends React.Component {
     super(props);
     this.imageHeight = new Animated.Value(50);
     this.state={
-      keyb:30
+      keyb:0
     }
 
     this._keyboardDidShow = this._keyboardDidShow.bind(this);
@@ -38,26 +38,22 @@ export default class Head extends React.Component {
   _keyboardDidShow() {
     
   this.setState({
-    keyb:-10
+    keyb:60
   },
   () => this.forceUpdate())
   }
 
   _keyboardDidHide() {
     this.setState({
-      keyb:30
+      keyb:0
     }, () => this.forceUpdate())
     }
 
 
     cStyle = function(options) {
       return {
-        textAlign:"left",
-        fontSize:15,
-        paddingTop:5,
-        paddingBottom:this.state.keyb,
-        fontFamily: 'regular',
-        marginBottom:20,
+        top:this.state.keyb
+        
       }
     }
 
@@ -69,9 +65,11 @@ export default class Head extends React.Component {
 
 
         <KeyboardAvoidingView style={styles.container2} behavior="position" enabled>
+        <View style={this.cStyle()}>
         <Text style={styles.head}>Reskassa</Text>
         <Text style={styles.head2}>Karlstad</Text>
-        <Text style={this.cStyle()}>Logga in med Karlstadsbusskonto</Text>
+        <Text style={styles.sub}>Logga in med Karlstadsbusskonto</Text>
+        </View>
         <View style = {styles.textHolder}>
         <TextInput
           style={styles.input}
@@ -124,7 +122,7 @@ export default class Head extends React.Component {
 
 const styles = StyleSheet.create({
   links:{
-marginTop:50
+marginTop:40
   },
   textHolder:{
  
@@ -185,14 +183,15 @@ marginTop:50
   input: {
     
     height: 50,
-    paddingHorizontal:5,
+    paddingHorizontal:20,
     textAlign: 'left',
     borderRadius: 10,
     borderWidth: 1,
     marginBottom:10,
     backgroundColor:"#fff",
-    borderColor:"#fff",
+    borderColor:"#dbdbdb",
     fontFamily: 'medium'
+    
 
   },
   helpers:{
