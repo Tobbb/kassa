@@ -73,11 +73,19 @@ export default class Viewer extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  not:{
+    backgroundColor: "#fff"
+
+  },
   upd:{
-padding:10
+padding:10,
+fontFamily: 'regular',
+
   },
   flat: {
     height: 25,
+    fontFamily: 'medium',
+
   },
   hl: {
     marginLeft:5,
@@ -100,18 +108,24 @@ padding:10
   extra: {
     fontSize: 15,
 padding:10,
+fontFamily: 'medium',
+
 
   },
   saldo: {
     padding:10,
-    fontSize: 25,
-    textAlign: "center",
+    fontSize: 50,
+    textAlign: "left",
+    fontFamily: 'medium',
+
 
   },
   money: {
     padding:10,
     fontSize: 40,
     textAlign: "center",
+    fontFamily: 'medium',
+
 
 
   },
@@ -119,19 +133,23 @@ padding:10,
     padding:10,
     fontSize: 20,
     textAlign: "center",
+    fontFamily: 'regular',
+
   },
   self: {
     padding:10,
     fontSize: 30,
+    fontFamily: 'medium',
 
     textAlign: "center",
 
   },
   container: {
     flex: 1,
-    justifyContent: "center",
+    
     alignItems: "center",
     width: "100%",
-    backgroundColor: "#fff"
+    backgroundColor:"#fff",
+
   },
 });

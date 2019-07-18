@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, ActivityIndicator,ToastAndroid } from 'react-native';
+import * as Font from 'expo-font';
 
 import Head from '../components/Head';
 import Login from '../components/Login';
@@ -31,6 +32,12 @@ export default class Main extends React.Component {
   }
 
   async componentDidMount() {
+   await Font.loadAsync({
+      'medium': require('../assets/Roboto-Medium.ttf'),
+      'regular': require('../assets/Roboto-Regular.ttf'),
+
+    });
+
       const GDPR = await AsyncStorage.getItem('gdpr')?
       await this._retrieveLogin():
       this.setState({
@@ -293,9 +300,7 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    alignItems: 'center',
     width: "100%",
-  
   },
 
 

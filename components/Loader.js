@@ -29,11 +29,11 @@ export default class Loader extends React.Component {
   }
 
   animateSlow () {
-    this.animatedValueSlow.setValue(0)
+    //this.animatedValueSlow.setValue(0)
     Animated.timing(
       this.animatedValueSlow,
       {
-        toValue: 1,
+        toValue: 1000,
         duration: 5000,
         easing: Easing.linear
 
@@ -82,7 +82,7 @@ export default class Loader extends React.Component {
         />
           </Animated.View>
         <Text style={styles.te}>Laddar data</Text>
-
+        <Text style={styles.e}>Detta kan ta lite tid...</Text>
  
               <Animated.View
         style={{
@@ -93,28 +93,65 @@ export default class Loader extends React.Component {
           source={require("../assets/BUS.png")}
         />
           </Animated.View>
-          <Animated.View
-        style={{
-    
-          position:'absolute',
-          bottom:-70,
-   
-          paddingLeft:marginLeftSlow
-      }} >
+          <View
+        style={styles.trees} >
                   <Image
-          style={{width: 200, height: 200, top:-50}}
+          style={{width: 40, height: 50, top:-110}}
           source={require("../assets/tree.png")}
         />
-          </Animated.View>
+                          <Image
+          style={{width: 40, height: 50, top:-130}}
+          source={require("../assets/tree.png")}
+        />
+                                  <Image
+          style={{width: 40, height: 50, top:-90 }}
+          source={require("../assets/tree.png")}
+        />
+                                          <Image
+          style={{width: 40, height: 50, top:-90 }}
+          source={require("../assets/tree.png")}
+        />
+                                          <Image
+          style={{width: 40, height: 50, top:-115 }}
+          source={require("../assets/tree.png")}
+        />
+                                                  <Image
+          style={{width: 40, height: 50, top:-100 }}
+          source={require("../assets/tree.png")}
+        />
+                                                  <Image
+          style={{width: 40, height: 50, top:-115 }}
+          source={require("../assets/tree.png")}
+        />
+                                                  <Image
+          style={{width: 40, height: 50, top:-125 }}
+          source={require("../assets/tree.png")}
+        />
+                                                  <Image
+          style={{width: 40, height: 50, top:-140 }}
+          source={require("../assets/tree.png")}
+        />
+        
+          </View>
         </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  trees:{
+    position:'absolute',
+    bottom:-70,
+    flexDirection:"row",
+  },
   te:{
-    fontSize:15,
+    fontSize:30,
     padding:20,
+   
+  },
+  e:{
+    fontSize:20,
+
   },
     container: {
 flex:.75,
