@@ -34,7 +34,7 @@ export default class Konto extends React.Component {
             style={styles.bt}
             title="Stäng fönster"
           accessibilityLabel="Stäng"
-          color="#ff8800"
+          color="#ff0000"
         />
         </View>
     );
