@@ -149,7 +149,7 @@ fontFamily: 'medium',
     
     alignItems: "center",
     width: "100%",
-    backgroundColor:"#fff",
+    backgroundColor:"#fff8f0",
 
   },
 });

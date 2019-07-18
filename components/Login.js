@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { StyleSheet, Text, View, TextInput,Keyboard, Button,Animated, AsyncStorage, KeyboardAvoidingView, ActivityIndicator,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput,LinearGradient,Keyboard, Button,Animated, AsyncStorage, KeyboardAvoidingView, ActivityIndicator,TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -104,7 +104,7 @@ export default class Head extends React.Component {
         <Text style={styles.small}>Vi sparar inga uppgifter, och har ingen koppling till Karlstadsbuss</Text>
 
       </KeyboardAvoidingView>
-
+     
       <View style={styles.links}>
       <TouchableOpacity style={styles.helpers} onPress={()=>this.props.handleWeb('https://webtick.se/webtick/user/pages/login/RegisterAccount.iface?provider=2')} >
  <Text style={styles.reg}> Registrera konto (Länk)</Text>
@@ -113,6 +113,7 @@ export default class Head extends React.Component {
  <Text style={styles.reg}> Glömt Lösenord (Länk)</Text>
     </TouchableOpacity>
     </View>
+    
     </View>
 
 
@@ -131,7 +132,7 @@ marginTop:50
   },
   house:{
     textAlign:"center",
-    backgroundColor:"#ffd87d",
+    backgroundColor:"#fff8f0",
     flex:1
   },
 

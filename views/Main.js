@@ -20,8 +20,8 @@ export default class Main extends React.Component {
       date: "",
       onCard:"",
       onCardDate:"",
-      password: '63791d2c62',
-      text: 'Tobe',
+      password: '',
+      text: '',
       isLoggedin: false,
       isLoading: true,
       error:'',
@@ -210,7 +210,8 @@ export default class Main extends React.Component {
         this.setState({
           isLoggedin: false,
           isLoading: false,
-          error:"Fel med karlstadsbuss interna system"
+          error:"Fel med karlstadsbuss interna system",
+          password:''
         })
 
       }
@@ -218,7 +219,8 @@ export default class Main extends React.Component {
         this.setState({
           isLoggedin: false,
           isLoading: false,
-          error:"Fel vid inloggning, försök igen"
+          error:"Fel vid inloggning, försök igen",
+          password:''
         })
        
       }
