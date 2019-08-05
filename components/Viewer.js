@@ -55,7 +55,9 @@ export default class Viewer extends React.Component {
           }
         />
 </View>
-        <Text style={styles.upd}>Uppdaterat {this.props.date}</Text>
+        <Text style={styles.upd1}>Uppdaterat {this.props.date}</Text>
+        <Text style={styles.upd}>Använd kortet för att uppdatera värdet</Text>
+
         <Text style={styles.self}>{this.props.text}</Text>
         <Text style={styles.extra}>{this.props.onCard}</Text>
         <Text style={styles.extra}>{this.props.onCardDate}</Text>
@@ -77,9 +79,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff"
 
   },
+  upd1:{
+    paddingTop:10,
+    fontFamily: 'regular',
+    
+      },
   upd:{
-padding:10,
+paddingBottom:10,
 fontFamily: 'regular',
+fontSize:12
 
   },
   flat: {

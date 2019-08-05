@@ -244,7 +244,7 @@ this.setState({
 
   render() {
     return (
-      
+ 
 
       <View style={styles.container}>
          {this.state.isLoading &&

@@ -64,8 +64,8 @@ export default class Loader extends React.Component {
       outputRange: [width*2, -width]
     })
     const movingMargin = this.animatedValue.interpolate({
-      inputRange: [0 ,.5, 1],
-      outputRange: [0 ,40, 0]
+      inputRange: [0 ,.12,.25, .5,.75,.88, 1],
+      outputRange: [0 ,20,30, 40,30,20, 0]
     })
     return (
 
