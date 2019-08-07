@@ -19,7 +19,7 @@ export default class Gdpr extends React.Component {
         <View style={styles.container}>
 <Text style={{fontSize:20}}>Dina personuppgifter</Text>
 <Text style={{padding:20}}> För att använda appen (Reskassa, hädanefter appen ) kräver det att du godkänner 
-    våra villkor och policys kring personuppgifter innan du börjar använda den.
+    våra villkor och policys kring personuppgifter innan du börjar använda den, om inte, vänligen avinstallera appen.
     Dina inloggningsuppgifter sparas lokalt i din telefon och används enbart för att logga in på Karlstadsbuss hemsida. 
     Appen levereras som den är utan garantier. 
     Samtlig data som presenteras hämtas från Karlstadsbuss hemsida, därför kan inga garantier lämnas kring störningar eller bristfällig information 
@@ -30,6 +30,8 @@ export default class Gdpr extends React.Component {
          style={styles.bt}
             title="Jag godkänner"
           accessibilityLabel="Hämta data"
+          color="#24c912"
+
         />
         </View>
     );
@@ -39,7 +41,6 @@ export default class Gdpr extends React.Component {
 const styles = StyleSheet.create({
     bt:{
     width:"100%",
-    
     },
 
     container: {
@@ -47,6 +48,7 @@ position:"absolute",
 height:"80%",
 width:"80%",
 marginTop:"10%",
+marginLeft:"10%",
 justifyContent:"center",
 alignItems: 'center',
 borderRadius: 10,
