@@ -41,8 +41,6 @@ export default class Main extends React.Component {
       this.setState({
         gdpr: false
       })
-
-
   }
 
   async acceptgdpr() {
@@ -80,41 +78,32 @@ export default class Main extends React.Component {
           this.fetchData();
         }
         else {
-          this.setState({
-            isLoading: false,
-          })
+          this.setLoading(false);
+
         }
       })
 
     } catch (error) {
-      this.setState({
-        isLoggedin: false,
-      })
+      this.setLoading(false);
+
     }
   };
 
   async _onClick() {
 
-    if (!this.state.isLoggedin) {
-
-      await this._setLogin();
-    }
     if (this.state.text != null && this.state.password != null) {
-      this.setState({
-        isLoading: true
-      })
+      this.setLoading(true);
+
 
       await this.fetchData();
 
-      this.setState({
-        isLoading: false
-      })
+      this.setLoading(false);
+
     }
     else {
 
-      this.setState({
-        isLoading: false,
-      })
+      this.setLoading(false);
+
     }
 
 
@@ -138,6 +127,8 @@ export default class Main extends React.Component {
 
     if (this.state.text != null && this.state.password != null) {
 
+
+      // INIT
       var details = {
         providerHidden: 2,
         "j_username": this.state.text,
@@ -145,13 +136,21 @@ export default class Main extends React.Component {
         "submitBtn": "Logga in"
       };
       var formBody = [];
+      let pattern = /idg_opt_319">(.*?) kr <\/span>/;
+      let patternDate = /Senast uppdaterat (.*?)\)<\/span>/
+      let onPat = /idg_opt_306">(.*?)<\/span>/;
+      let onPatDate = /idg_opt_308">Fr&#229;n(.*?)<\/span>/;
+      let failPatt = /kortet ur bakgrundsystemet/;
+      var on = "";
+      var onDate = "";
+
+
       for (var property in details) {
         var encodedKey = encodeURIComponent(property);
         var encodedValue = encodeURIComponent(details[property]);
         formBody.push(encodedKey + "=" + encodedValue);
       }
       formBody = formBody.join("&");
-
       const response = await fetch('https://webtick.se/webtick/user/pages/login/j_acegi_security_check', {
         method: 'POST',
         headers: {
@@ -161,15 +160,7 @@ export default class Main extends React.Component {
       })
 
       const htmlString = await response.text();  // get response text
-      let pattern = /idg_opt_319">(.*?) kr <\/span>/;
-      let patternDate = /Senast uppdaterat (.*?)\)<\/span>/
-      let onPat = /idg_opt_306">(.*?)<\/span>/;
-      let onPatDate = /idg_opt_308">Fr&#229;n(.*?)<\/span>/;
 
-      let failPatt = /kortet ur bakgrundsystemet/;
-
-      var on = "";
-      var onDate = "";
       if (onPat.test(htmlString) && onPatDate.test(htmlString)) {
         on = onPat.exec(htmlString);
         onDate = onPatDate.exec(htmlString);
@@ -187,45 +178,54 @@ export default class Main extends React.Component {
           onCard: on[1],
           onCardDate: onDate,
           isLoggedin: true,
-          isLoading: false,
           error: ''
 
         })
+        this.setLoading(false);
+
+        await this._setLogin();
+
+        
       }
       else if (failPatt.test(htmlString)) {
         this.setState({
           isLoggedin: false,
-          isLoading: false,
           error: "Fel med karlstadsbuss interna system",
           password: ''
         })
+        this.setLoading(false);
 
       }
       else {
         this.setState({
           isLoggedin: false,
-          isLoading: false,
           error: "Fel vid inloggning, försök igen",
           password: ''
+          
         })
 
+        this.setLoading(false);
+        await this.logOut();
       }
       if (this.state.error != '')
         ToastAndroid.show(this.state.error, ToastAndroid.LONG);
-
-
     }
   }
 
-  onChangeValue = (name, val) => {
 
+
+
+  onChangeValue = (name, val) => {
     this.setState({
       [name]: val
     })
   }
 
-
-
+  setLoading(val){
+    this.setState({
+      isLoading:val
+    })
+  }
 
 
   render() {

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { StyleSheet, View,ActivityIndicator,Text, Image,Animated,Easing,Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import {  AdMobBanner} from 'expo-ads-admob';
 
 
 export default class Loader extends React.Component {
@@ -10,7 +11,6 @@ export default class Loader extends React.Component {
     super(props);
     this.animatedValue = new Animated.Value(0)
     this.animatedValueSlow = new Animated.Value(0)
-
   }
   componentDidMount () {
     this.animate()
@@ -65,25 +65,16 @@ export default class Loader extends React.Component {
     })
     const movingMargin = this.animatedValue.interpolate({
       inputRange: [0 ,.12,.25, .5,.75,.88, 1],
-      outputRange: [0 ,20,30, 40,30,20, 0]
+      outputRange: [-100 ,-80,-70, -50,-70,-80, -100]
     })
     return (
 
         <View style={styles.container}>
-              <Animated.View
-        style={{
-         
-          marginLeft:marginLeft2,
-          bottom:movingMargin,
-      }} >
-                  <Image
-          style={{width: 200, height: 200}}
-          source={require("../assets/sun.png")}
-        />
-          </Animated.View>
+<View style={styles.text}></View>
+          <View  style={styles.text}>
         <Text style={styles.te}>Laddar data</Text>
         <Text style={styles.e}>Detta kan ta lite tid...</Text>
- 
+        </View>
               <Animated.View
         style={{
           marginLeft,
@@ -96,52 +87,73 @@ export default class Loader extends React.Component {
           <View
         style={styles.trees} >
                   <Image
-          style={{width: 40, height: 50, top:-110}}
+          style={{width: 40, height: 50, top:30}}
           source={require("../assets/tree.png")}
         />
                           <Image
-          style={{width: 40, height: 50, top:-130}}
+          style={{width: 40, height: 50, top:0}}
           source={require("../assets/tree.png")}
         />
                                   <Image
-          style={{width: 40, height: 50, top:-90 }}
+          style={{width: 40, height: 50, top:-10 }}
           source={require("../assets/tree.png")}
         />
                                           <Image
-          style={{width: 40, height: 50, top:-90 }}
+          style={{width: 40, height: 50, top:20 }}
           source={require("../assets/tree.png")}
         />
                                           <Image
-          style={{width: 40, height: 50, top:-115 }}
+          style={{width: 40, height: 50, top:40 }}
           source={require("../assets/tree.png")}
         />
                                                   <Image
-          style={{width: 40, height: 50, top:-100 }}
+          style={{width: 40, height: 50, top:-10 }}
           source={require("../assets/tree.png")}
         />
                                                   <Image
-          style={{width: 40, height: 50, top:-115 }}
+          style={{width: 40, height: 50, top:30 }}
           source={require("../assets/tree.png")}
         />
                                                   <Image
-          style={{width: 40, height: 50, top:-125 }}
+          style={{width: 40, height: 50, top:0 }}
           source={require("../assets/tree.png")}
         />
                                                   <Image
-          style={{width: 40, height: 50, top:-140 }}
+          style={{width: 40, height: 50, top:40 }}
           source={require("../assets/tree.png")}
         />
         
           </View>
+
+<View style={styles.bottom}>
+          <AdMobBanner
+  bannerSize="largeBanner"
+  adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID, Replace with your-admob-unit-id
+  testDeviceID="EMULATOR"
+  onDidFailToReceiveAdWithError={this.bannerError} />
+</View>
+
+
         </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  text:{
+    flex:1,
+    justifyContent:"center",
+    alignItems:"center",
+    marginTop:"15%"
+  },
+  bottom: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  
+    
+  },
   trees:{
-    position:'absolute',
-    bottom:-70,
+ flex:1,
     flexDirection:"row",
   },
   te:{
@@ -155,9 +167,9 @@ const styles = StyleSheet.create({
   },
     container: {
 flex:1,
-justifyContent:"center",
+
 alignItems:"center",
 backgroundColor:"#fff8f0",
-paddingBottom:"30%",
+
   },
 });
