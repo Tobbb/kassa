@@ -2,6 +2,8 @@ import React from 'react';
 
 import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, ActivityIndicator, ToastAndroid } from 'react-native';
 import * as Font from 'expo-font';
+import { Notifications } from 'expo';
+import { Permissions } from 'expo';
 
 import Head from '../components/Head';
 import Login from '../components/Login';
@@ -28,6 +30,9 @@ export default class Main extends React.Component {
       gdpr: true,
       webOpen: false,
       link: '',
+      day:null,
+      month:null,
+      year:null,
     };
   }
 
@@ -41,7 +46,32 @@ export default class Main extends React.Component {
       this.setState({
         gdpr: false
       })
+      this.sendNotificationImmediately();
+     
+      
   }
+
+  askPermissions = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = existingStatus;
+    if (existingStatus !== granted) {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== granted) {
+      return false;
+    }
+    return true;
+  };
+
+  sendNotificationImmediately = async () => {
+    let notificationId = await Notifications.presentLocalNotificationAsync({
+      title: 'Ditt busskort går ut imorgon!'
+    },{
+      time: new Date().getTime() + 10000, 
+    });
+    console.log(notificationId); // can  be saved in AsyncStorage or send to server
+  };
 
   async acceptgdpr() {
     this.setState({
@@ -171,6 +201,10 @@ export default class Main extends React.Component {
       if (pattern.test(htmlString) && patternDate.test(htmlString)) {
         let match = pattern.exec(htmlString);
         let matchDate = patternDate.exec(htmlString);
+        let shortDate=onDate.substring(17,27);
+        let years =shortDate.substring(0,4);
+        let months= shortDate.substring(5,7);
+        let days= shortDate.substring(8,10);
 
         this.setState({
           money: match[1],
@@ -178,8 +212,10 @@ export default class Main extends React.Component {
           onCard: on[1],
           onCardDate: onDate,
           isLoggedin: true,
-          error: ''
-
+          error: '',
+          day:days,
+          month:months,
+          year:years,
         })
         this.setLoading(false);
 
@@ -226,6 +262,10 @@ export default class Main extends React.Component {
       isLoading:val
     })
   }
+  showSettings(){
+    //TODO personal ads 
+    // notiser
+  }
 
 
   render() {
@@ -236,9 +276,11 @@ export default class Main extends React.Component {
         {this.state.isLoading &&
           <Loader />}
 
-        {this.state.isLoggedin && !this.state.isLoading &&
+        {!this.state.isLoading &&
           <Head
             logOut={this.logOut.bind(this)}
+            isLoggedin={this.state.isLoggedin}
+            showSettings={this.showSettings.bind(this)}
           />
         }
         {!this.state.isLoggedin && !this.state.isLoading &&

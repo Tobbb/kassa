@@ -38,7 +38,7 @@ export default class Head extends React.Component {
   _keyboardDidShow() {
     
   this.setState({
-    keyb:60
+    keyb:70
   },
   () => this.forceUpdate())
   }
@@ -177,7 +177,7 @@ marginTop:40
     alignItems: 'center',
     marginLeft:"10%",
     width:"80%",
-    marginTop:"25%",
+    paddingVertical:"10%",
     
   },
   input: {

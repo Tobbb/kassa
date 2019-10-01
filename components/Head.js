@@ -23,8 +23,10 @@ export default class Head extends React.Component {
 
 
       <View style={styles.container}>
+        <Ionicons name="md-settings" size={32} color="black" style={styles.settings} onPress={this.props.showSettings} />
+{this.props.isLoggedin &&
         <Ionicons name="md-log-out" size={32} color="black" style={styles.btn} onPress={this.props.logOut} />
-
+      }
       </View>
     );
   }
@@ -32,13 +34,17 @@ export default class Head extends React.Component {
 
 const styles = StyleSheet.create({
     btn:{
-        paddingLeft:"90%"
+      width:"10%",
+    },
+    settings:{
+    width:"80%",
+    marginLeft:"7%"
     },
     container: {
-    width:"100%",
+    flex:.15,
     paddingTop:"10%",
     backgroundColor:"#fff8f0",
-
+    flexDirection: 'row'
 
   },
 });

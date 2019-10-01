@@ -114,7 +114,7 @@ fontSize:12
     marginRight: 10,
   },
   extra: {
-    fontSize: 15,
+    fontSize: 17,
 padding:10,
 fontFamily: 'medium',
 
