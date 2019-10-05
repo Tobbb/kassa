@@ -122,7 +122,7 @@ export default class Head extends React.Component {
 
 const styles = StyleSheet.create({
   links:{
-marginTop:40
+marginTop:10
   },
   textHolder:{
  
@@ -131,6 +131,7 @@ marginTop:40
   house:{
     textAlign:"center",
     backgroundColor:"#fff8f0",
+    //backgroundColor:"#ccc",
     flex:1
   },
 
@@ -174,10 +175,10 @@ marginTop:40
   },
   
   container2: {
-    alignItems: 'center',
+  
     marginLeft:"10%",
     width:"80%",
-    paddingVertical:"10%",
+    paddingVertical:"15%",
     
   },
   input: {

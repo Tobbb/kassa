@@ -34,15 +34,17 @@ export default class Head extends React.Component {
 
 const styles = StyleSheet.create({
     btn:{
+      marginTop:"10%",
       width:"10%",
     },
     settings:{
+      marginTop:"10%",
     width:"80%",
     marginLeft:"7%"
     },
     container: {
-    flex:.15,
-    paddingTop:"10%",
+    flex:.12,
+   
     backgroundColor:"#fff8f0",
     flexDirection: 'row'
 

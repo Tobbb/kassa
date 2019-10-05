@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { StyleSheet, View,ActivityIndicator,Text, Button,Animated,Easing,Dimensions } from 'react-native';
+import { StyleSheet, View,ActivityIndicator,Text, Button,Animated,Easing,Dimensions,Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -25,6 +25,18 @@ export default class Gdpr extends React.Component {
     Samtlig data som presenteras hämtas från Karlstadsbuss hemsida, därför kan inga garantier lämnas kring störningar eller bristfällig information 
     Registrering och glömt lösenord öppnar en länk till Karlstadsbuss hemsida för, ingen data behandlas i appen.
     Villkor för Karlstadsbuss finner du på följande länk https://karlstad.se/Karlstadsbuss/kundservice/Resevillkor/</Text>
+
+    <View style={styles.box}>
+<View style={styles.col}>
+<Text style={{fontSize:18}}>Visa personliga annonser</Text>
+<Text style={{fontSize:10}}>(Detta kommer inte minska antalet annonser)</Text>
+</View>
+<Switch
+         onValueChange = {this.props.changePersonalAds}
+         value={this.props.showPersonalAds==='true' || this.props.showPersonalAds}
+
+/>
+</View>
 <Button
           onPress={this.props.acceptgdpr.bind(this)}
          style={styles.bt}
@@ -45,7 +57,7 @@ const styles = StyleSheet.create({
 
     container: {
 position:"absolute",
-height:"80%",
+height:"90%",
 width:"80%",
 marginTop:"10%",
 marginLeft:"10%",
@@ -54,5 +66,19 @@ alignItems: 'center',
 borderRadius: 10,
 borderWidth: 1,
 backgroundColor:"#fff"
+  },
+  col:{
+    flexDirection:"column",
+    width:"80%",
+},
+
+  box:{
+    marginTop:"10%",
+    justifyContent:"center",
+    alignContent:"center",
+    flexDirection:"row",
+    alignItems:"flex-start",
+    paddingBottom:5
+   
   },
 });

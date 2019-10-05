@@ -11,6 +11,7 @@ import Viewer from '../components/Viewer';
 import Loader from '../components/Loader';
 import Gdpr from '../components/Gdpr';
 import Konto from '../components/Konto';
+import Notify from '../components/Notify'
 
 export default class Main extends React.Component {
 
@@ -33,20 +34,31 @@ export default class Main extends React.Component {
       day:null,
       month:null,
       year:null,
+      showSettings:false,
+      showPersonalAds:false,
     };
   }
 
   async componentDidMount() {
+    await     AsyncStorage.clear();
+
     await Font.loadAsync({
       'medium': require('../assets/Roboto-Medium.ttf'),
       'regular': require('../assets/Roboto-Regular.ttf'),
     });
+
+    
+    this.setState({
+      showPersonalAds:await AsyncStorage.getItem('showPersonalAds')
+    })
+        
+
       await AsyncStorage.getItem('gdpr') ?
       await this._retrieveLogin() :
       this.setState({
         gdpr: false
       })
-      this.sendNotificationImmediately();
+      //this.sendNotificationImmediately();
      
       
   }
@@ -80,6 +92,13 @@ export default class Main extends React.Component {
     await AsyncStorage.setItem('gdpr', 'ok').then(() => this._retrieveLogin())
   }
 
+  async changePersonalAds(val) {
+    
+    this.setState({
+      showPersonalAds: val
+    })
+    await AsyncStorage.setItem('showPersonalAds', val.toString())
+  }
 
   handleWeb(link) {
     this.setState({
@@ -156,9 +175,6 @@ export default class Main extends React.Component {
   async fetchData() {
 
     if (this.state.text != null && this.state.password != null) {
-
-
-      // INIT
       var details = {
         providerHidden: 2,
         "j_username": this.state.text,
@@ -263,8 +279,10 @@ export default class Main extends React.Component {
     })
   }
   showSettings(){
-    //TODO personal ads 
-    // notiser
+   
+ this.setState({
+  showSettings:!this.state.showSettings,
+ })
   }
 
 
@@ -273,8 +291,11 @@ export default class Main extends React.Component {
 
 
       <View style={styles.container}>
-        {this.state.isLoading &&
-          <Loader />}
+        {this.state.isLoading  &&
+          <Loader
+            gdpr={this.state.gdpr}
+            showPersonalAds ={this.state.showPersonalAds}
+          />}
 
         {!this.state.isLoading &&
           <Head
@@ -283,6 +304,9 @@ export default class Main extends React.Component {
             showSettings={this.showSettings.bind(this)}
           />
         }
+
+
+
         {!this.state.isLoggedin && !this.state.isLoading &&
           <Login
             text={this.state.text}
@@ -308,8 +332,17 @@ export default class Main extends React.Component {
         {!this.state.gdpr &&
           <Gdpr
             acceptgdpr={this.acceptgdpr.bind(this)}
+            showPersonalAds={this.state.showPersonalAds}
+            changePersonalAds={this.changePersonalAds.bind(this)}
           />
 
+        }
+                {this.state.showSettings &&
+          <Notify
+          showPersonalAds={this.state.showPersonalAds}
+          changePersonalAds={this.changePersonalAds.bind(this)}
+          showSettings={this.showSettings.bind(this)}
+          />
         }
         {this.state.webOpen &&
           <Konto
