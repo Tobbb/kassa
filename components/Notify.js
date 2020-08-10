@@ -25,11 +25,23 @@ export default class Notify extends React.Component {
 </View>
 <Switch
          onValueChange = {this.props.changePersonalAds}
-         value={this.props.showPersonalAds==='true' || this.props.showPersonalAds}
+         value={this.props.showPersonalAds==='true' || this.props.showPersonalAds == true}
 
 />
 </View>
 
+
+<View style={styles.box}>
+<View style={styles.col}>
+<Text style={{fontSize:18}}>Skicka notiser</Text>
+<Text style={{fontSize:10}}>(Kräver att du loggat in i appen minst en gång per påladdning)</Text>
+</View>
+<Switch
+         onValueChange = {this.props.changeallowNoti}
+         value={this.props.allowNoti==='true' || this.props.allowNoti == true}
+
+/>
+</View>
 
 
     <View style={styles.btnbox}> 

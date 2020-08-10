@@ -10,7 +10,7 @@ export default class Viewer extends React.Component {
     super(props);
     this.state = {
       ticketsPrices: [13, 18, 18, 21, 13, 41],
-      selectedItem: 3
+      selectedItem: this.props.presetUser
     };
   }
 
@@ -59,7 +59,7 @@ export default class Viewer extends React.Component {
         <Text style={styles.upd}>Använd kortet för att uppdatera värdet</Text>
 
         <Text style={styles.self}>{this.props.text}</Text>
-        <Text style={styles.extra}>{this.props.onCard}</Text>
+        <Text style={styles.extra}>{ this.props.onCard.replace("&#229;", "å")}</Text>
         <Text style={styles.extra}>{this.props.onCardDate}</Text>
 
         <Button

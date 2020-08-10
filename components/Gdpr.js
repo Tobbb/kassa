@@ -9,7 +9,6 @@ export default class Gdpr extends React.Component {
   constructor(props) {
     super(props);
 
-
   }
 
   render() {
@@ -33,7 +32,7 @@ export default class Gdpr extends React.Component {
 </View>
 <Switch
          onValueChange = {this.props.changePersonalAds}
-         value={this.props.showPersonalAds==='true' || this.props.showPersonalAds}
+         value={this.props.showPersonalAds==="true" || this.props.showPersonalAds ==true}
 
 />
 </View>

@@ -1,9 +1,10 @@
 import React from 'react';
 
 import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, KeyboardAvoidingView, ActivityIndicator, ToastAndroid } from 'react-native';
+import * as Permissions from 'expo-permissions';
 import * as Font from 'expo-font';
 import { Notifications } from 'expo';
-import { Permissions } from 'expo';
+
 
 import Head from '../components/Head';
 import Login from '../components/Login';
@@ -19,10 +20,10 @@ export default class Main extends React.Component {
     super(props);
 
     this.state = {
-      money: "",
-      date: "",
-      onCard: "",
-      onCardDate: "",
+        money: "",
+        date: "",
+        onCard: "",
+        onCardDate: "",
       password: '',
       text: '',
       isLoggedin: false,
@@ -31,39 +32,63 @@ export default class Main extends React.Component {
       gdpr: true,
       webOpen: false,
       link: '',
-      day:null,
-      month:null,
-      year:null,
-      showSettings:false,
-      showPersonalAds:false,
+      day: null,
+      month: null,
+      year: null,
+      showSettings: false,
+      showPersonalAds: false,
+      presetUser:2,
+      allowNoti:true,
     };
+    this.sendNotificationImmediately=this.sendNotificationImmediately.bind(this);
   }
 
   async componentDidMount() {
-    await     AsyncStorage.clear();
+    //await     AsyncStorage.clear();
 
+    //Load assets
     await Font.loadAsync({
       'medium': require('../assets/Roboto-Medium.ttf'),
       'regular': require('../assets/Roboto-Regular.ttf'),
     });
 
-    
+    //Load data
     this.setState({
-      showPersonalAds:await AsyncStorage.getItem('showPersonalAds')
+      showPersonalAds: await AsyncStorage.getItem('showPersonalAds'),
+      allowNoti:await AsyncStorage.getItem('notifi')
+      
     })
-        
-
-      await AsyncStorage.getItem('gdpr') ?
+    await AsyncStorage.getItem('gdpr') ?
       await this._retrieveLogin() :
       this.setState({
         gdpr: false
       })
-      //this.sendNotificationImmediately();
-     
-      
+    //this.sendNotificationImmediately();
+    //this.askPermissions()
+
   }
 
+  _retrieveLogin = async () => {
+    try {
+      this.setState({
+        text: await AsyncStorage.getItem('uName'),
+        password: await AsyncStorage.getItem('pWord'),
+      }, () => {
+        if (this.state.text != null && this.state.password != null) {
+          this.fetchData();
+        }
+        else {
+          this.setLoading(false);
+        }
+      })
+    } catch (error) {
+      this.setLoading(false);
+    }
+  };
+
+
   askPermissions = async () => {
+    try{
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
     let finalStatus = existingStatus;
     if (existingStatus !== granted) {
@@ -74,13 +99,18 @@ export default class Main extends React.Component {
       return false;
     }
     return true;
+  }
+  catch(e){
+
+  }
   };
 
   sendNotificationImmediately = async () => {
-    let notificationId = await Notifications.presentLocalNotificationAsync({
+    let time =new Date(parseInt(this.state.year),parseInt(this.state.month-1),parseInt(this.state.day),9);
+    let notificationId = await Notifications.scheduleLocalNotificationAsync({
       title: 'Ditt busskort går ut imorgon!'
-    },{
-      time: new Date().getTime() + 10000, 
+    }, {
+      time: time,
     });
     console.log(notificationId); // can  be saved in AsyncStorage or send to server
   };
@@ -93,11 +123,30 @@ export default class Main extends React.Component {
   }
 
   async changePersonalAds(val) {
-    
+
+   
     this.setState({
       showPersonalAds: val
-    })
-    await AsyncStorage.setItem('showPersonalAds', val.toString())
+    },async ()=>await AsyncStorage.setItem('showPersonalAds', val.toString()))
+    //await AsyncStorage.setItem('showPersonalAds', val.toString())
+  }
+
+  async changeallowNoti(val) {
+
+    if(!val){
+await   Notifications.dismissAllNotificationsAsync()
+
+    }
+    else{
+      if(  this.askPermissions() && this.state.year != null) 
+      {
+        this.sendNotificationImmediately();
+       }
+    }
+    this.setState({
+      allowNoti: val
+    },async ()=>await AsyncStorage.setItem('notifi', val.toString()))
+    //await AsyncStorage.setItem('showPersonalAds', val.toString())
   }
 
   handleWeb(link) {
@@ -108,35 +157,12 @@ export default class Main extends React.Component {
   }
 
   _setLogin = async () => {
-      await AsyncStorage.setItem('uName', this.state.text);
-      await AsyncStorage.setItem('pWord', this.state.password);
+    await AsyncStorage.setItem('uName', this.state.text);
+    await AsyncStorage.setItem('pWord', this.state.password);
   };
 
 
-  _retrieveLogin = async () => {
-    try {
-      const uName = await AsyncStorage.getItem('uName');
-      const pWord = await AsyncStorage.getItem('pWord');
 
-      this.setState({
-        text: uName,
-        password: pWord,
-
-      }, () => {
-        if (this.state.text != null && this.state.password != null) {
-          this.fetchData();
-        }
-        else {
-          this.setLoading(false);
-
-        }
-      })
-
-    } catch (error) {
-      this.setLoading(false);
-
-    }
-  };
 
   async _onClick() {
 
@@ -197,6 +223,10 @@ export default class Main extends React.Component {
         formBody.push(encodedKey + "=" + encodedValue);
       }
       formBody = formBody.join("&");
+      console.log("pre fetching")
+      let silly =await fetch('https://webtick.se/webtick/user/pages/CardOverview.iface');
+      console.log(silly);
+      console.log(" fetching")
       const response = await fetch('https://webtick.se/webtick/user/pages/login/j_acegi_security_check', {
         method: 'POST',
         headers: {
@@ -204,7 +234,7 @@ export default class Main extends React.Component {
         },
         body: formBody
       })
-
+      console.log("fetching done")
       const htmlString = await response.text();  // get response text
 
       if (onPat.test(htmlString) && onPatDate.test(htmlString)) {
@@ -217,10 +247,10 @@ export default class Main extends React.Component {
       if (pattern.test(htmlString) && patternDate.test(htmlString)) {
         let match = pattern.exec(htmlString);
         let matchDate = patternDate.exec(htmlString);
-        let shortDate=onDate.substring(17,27);
-        let years =shortDate.substring(0,4);
-        let months= shortDate.substring(5,7);
-        let days= shortDate.substring(8,10);
+        let shortDate = onDate.substring(17, 27);
+        let years = shortDate.substring(0, 4);
+        let months = shortDate.substring(5, 7);
+        let days = shortDate.substring(8, 10);
 
         this.setState({
           money: match[1],
@@ -229,15 +259,32 @@ export default class Main extends React.Component {
           onCardDate: onDate,
           isLoggedin: true,
           error: '',
-          day:days,
-          month:months,
-          year:years,
+          day: days,
+          month: months,
+          year: years,
+        },async () => {
+          let  old = await AsyncStorage.getItem('endTime');
+
+          if(old ==this.state.year+this.state.month+this.state.day)
+          {
+    console.log("s");
+          }
+          else{
+            await AsyncStorage.setItem('endTime', this.state.year+this.state.month+this.state.day)
+            if(this.state.allowNoti==='true' || this.state.allowNoti == true){
+           if(  this.askPermissions()) 
+           {
+             this.sendNotificationImmediately();
+            }
+          }
+        }
+         // console.log(this.state.year+this.state.month+this.state.day)
         })
         this.setLoading(false);
 
         await this._setLogin();
 
-        
+
       }
       else if (failPatt.test(htmlString)) {
         this.setState({
@@ -251,9 +298,9 @@ export default class Main extends React.Component {
       else {
         this.setState({
           isLoggedin: false,
-          error: "Fel vid inloggning, försök igen",
+          error: "Fel användarnamn eller lösenord, försök igen",
           password: ''
-          
+
         })
 
         this.setLoading(false);
@@ -273,16 +320,16 @@ export default class Main extends React.Component {
     })
   }
 
-  setLoading(val){
+  setLoading(val) {
     this.setState({
-      isLoading:val
+      isLoading: val
     })
   }
-  showSettings(){
-   
- this.setState({
-  showSettings:!this.state.showSettings,
- })
+  showSettings() {
+
+    this.setState({
+      showSettings: !this.state.showSettings,
+    })
   }
 
 
@@ -291,10 +338,10 @@ export default class Main extends React.Component {
 
 
       <View style={styles.container}>
-        {this.state.isLoading  &&
+        {this.state.isLoading &&
           <Loader
             gdpr={this.state.gdpr}
-            showPersonalAds ={this.state.showPersonalAds}
+            showPersonalAds={this.state.showPersonalAds}
           />}
 
         {!this.state.isLoading &&
@@ -325,7 +372,7 @@ export default class Main extends React.Component {
             onCardDate={this.state.onCardDate}
             text={this.state.text}
             _onClick={this._onClick.bind(this)}
-
+            presetUser={this.state.presetUser}
 
           />
         }
@@ -337,11 +384,13 @@ export default class Main extends React.Component {
           />
 
         }
-                {this.state.showSettings &&
+        {this.state.showSettings &&
           <Notify
-          showPersonalAds={this.state.showPersonalAds}
-          changePersonalAds={this.changePersonalAds.bind(this)}
-          showSettings={this.showSettings.bind(this)}
+            showPersonalAds={this.state.showPersonalAds}
+            changePersonalAds={this.changePersonalAds.bind(this)}
+            showSettings={this.showSettings.bind(this)}
+            allowNoti={this.state.allowNoti}
+            changeallowNoti={this.changeallowNoti.bind(this)}
           />
         }
         {this.state.webOpen &&

@@ -132,7 +132,7 @@ export default class Loader extends React.Component {
   adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID, Replace with your-admob-unit-id
   testDeviceID="EMULATOR"
   onDidFailToReceiveAdWithError={this.bannerError}
-  servePersonalizedAds={this.props.showPersonalAds} />
+  servePersonalizedAds={this.props.showPersonalAds==="true" || this.props.showPersonalAds ==true} />
 }
 </View>
 
